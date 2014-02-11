@@ -8,7 +8,7 @@ module OmniAuth
 
       option :name_identifier_format, nil
       option :idp_sso_target_url_runtime_params, {}
-      option :allowed_clock_drift, 0
+      
       def request_phase
         options[:assertion_consumer_service_url] ||= callback_url
         runtime_request_parameters = options.delete(:idp_sso_target_url_runtime_params)
@@ -29,7 +29,7 @@ module OmniAuth
           raise OmniAuth::Strategies::SAML::ValidationError.new("SAML response missing")
         end
 
-        response = Onelogin::Saml::Response.new(request.params['SAMLResponse'], options)
+        response = Onelogin::Saml::Response.new(request.params['SAMLResponse'], :allowed_clock_drift => 1)
         response.settings = Onelogin::Saml::Settings.new(options)
 
         @name_id = response.name_id
